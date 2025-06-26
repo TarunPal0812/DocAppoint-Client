@@ -196,7 +196,7 @@ const Appointments = () => {
 
   useEffect(() => {
     getAvailableSlots();
-    console.log(docSlots);
+    // console.log(docSlots);
     
   }, [docInfo]);
 
