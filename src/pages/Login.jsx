@@ -1,15 +1,68 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { AppContext } from "../context/AppContext";
+import axios from "axios"
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
+  const { backendUrl, token, setToken } =
+    useContext(AppContext);
+
+  const navigate = useNavigate()
+
   const [state, setState] = useState("sign up");
-  const [emil, setEmail] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
 
-  const onSubmitHandler = async(e)=>{
-    e.preventDefault()
-  }
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (state === "sign up") {
+        const { data } = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+        } else {
+          toast.error(data.message || "Invalid Cradential");
+        }
+      } else if (state === "Login") {
+        const { data } = await axios.post(backendUrl + "/api/user/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+        } else {
+          toast.error(data.message || "Some Error Occur");
+        }
+      }
+
+      setName("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      toast.error(error.message || "Internal server error");
+    }
+  };
+
+ 
+  useEffect(()=>{
+
+    if (token) {
+      navigate("/")
+    }
+
+  },[token])
+
+
 
   const fun1 = ()=>{
     setState('sign up')
@@ -23,7 +76,7 @@ const Login = () => {
   };
 
   return (
-    <form className="min-h-[80vh] flex items-center">
+    <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg">
         <p className="text-2xl font-semibold">
           {state === "sign up" ? "Create Account" : "Login"}
@@ -38,7 +91,7 @@ const Login = () => {
             <input
               className="border border-zinc-300 rounded w-full p-2 mt-1"
               type="text"
-              onChange={(e) => setName(e.target.name)}
+              onChange={(e) => setName(e.target.value)}
               value={name}
             />
           </div>
@@ -49,8 +102,8 @@ const Login = () => {
           <input
             className="border border-zinc-300 rounded w-full p-2 mt-1"
             type="text"
-            onChange={(e) => setEmail(e.target.name)}
-            value={emil}
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
           />
         </div>
         <div className="w-full">
@@ -58,11 +111,11 @@ const Login = () => {
           <input
             className="border border-zinc-300 rounded w-full p-2 mt-1"
             type="password"
-            onChange={(e) => setPassword(e.target.name)}
+            onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
         </div>
-        <button className="bg-primary text-white w-full py-2 rounded-md text-base">
+        <button type="submit" className="bg-primary text-white w-full py-2 rounded-md text-base">
           {state === "sign up" ? "Create Account" : "Login"}
         </button>
 
