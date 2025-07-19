@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from "axios"
 import { toast } from 'react-toastify'
 import { useEffect } from 'react'
+import {useNavigate} from "react-router-dom"
 
 
 const MyAppointments = () => {
@@ -11,6 +12,8 @@ const MyAppointments = () => {
   const { backendUrl,token }  = useContext(AppContext)
 
   const [appointments, setAppointments] = useState([])
+
+  const navigate = useNavigate()
 
   const getUserAppointments = async ()=>{
     try {
@@ -71,6 +74,68 @@ const MyAppointments = () => {
       toast.error(error.message);
     }
   }
+
+  const intitPay = (order)=>{
+    const options = {
+      key: import.meta.env.KEY_ID || "rzp_test_uzoprBwiQG6EL5",
+      amount: order.amount,
+      currency: order.currency,
+      name: "Appoint Payment",
+      description: "Test Transaction",
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        // console.log(response);
+        try {
+
+          const { data } = await axios.post(
+            backendUrl + "/api/user/verifyRazorpay",
+            response,
+            { headers: { token } }
+          );
+
+          if (data.success) {
+            getUserAppointments()
+            navigate("/my-appointments");
+            toast.success(data.message)
+          }
+
+        } catch (error) {
+          console.log(error.message);
+          toast.error(error.message);
+        }
+      },
+      
+    };
+
+    var rzp = new window.Razorpay(options);
+    
+      rzp.open();
+      
+
+
+  }
+
+  const appointmentRazorpay = async (appointmentId) => {
+    try {
+
+      const { data } = await axios.post(backendUrl + "/api/user/payment-razorpay",{appointmentId},{headers:{token}})
+      // console.log(data.order);
+      
+
+      if (data.success) {
+        
+        // console.log(data.order);
+        
+        intitPay(data.order)
+        
+      }
+
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  }
   
 
   useEffect(()=>{
@@ -114,8 +179,17 @@ const MyAppointments = () => {
             </div>
             <div className=""></div>
             <div className="flex flex-col gap-2 justify-end">
-              {!item.cancelled && (
-                <button className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded  hover:bg-primary hover:text-white transition-all duration-300">
+              {!item.cancelled && item.payment && (
+                <button
+                  className="text-sm text-stone-900 text-center sm:min-w-48 py-2 border rounded bg-indigo-300"
+                >Paid
+                </button>
+              )}
+              {!item.cancelled && !item.payment && (
+                <button
+                  onClick={() => appointmentRazorpay(item._id)}
+                  className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded  hover:bg-primary hover:text-white transition-all duration-300"
+                >
                   Pay Online
                 </button>
               )}
@@ -129,7 +203,7 @@ const MyAppointments = () => {
               )}
               {item.cancelled && (
                 <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
-                 Appointment Cancelled
+                  Appointment Cancelled
                 </button>
               )}
             </div>
