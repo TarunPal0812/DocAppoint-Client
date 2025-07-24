@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { specialityData } from '../assets/assets_frontend/assets.js'
 import { Link } from 'react-router-dom'
 
