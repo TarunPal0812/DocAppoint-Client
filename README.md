@@ -1,151 +1,152 @@
-# DocAppoint - Doctor Appointment Management Frontend
 
-DocAppoint is a modern, responsive web application for booking appointments with trusted doctors. This frontend project is built with React, Tailwind CSS, and Vite, providing a seamless and user-friendly experience for patients to browse doctors by speciality, view doctor profiles, and manage appointments.
 
 ---
 
-## Features
+````markdown
+# 🙋‍♂️ DocAppoint User Panel
 
-- **Home Page:** Attractive landing page with call-to-action and featured doctors.
-- **Doctor Directory:** Browse all doctors or filter by speciality.
-- **Doctor Profiles:** View detailed information about each doctor, including experience, speciality, and availability.
-- **Appointment Booking:** Select available slots and book appointments.
-- **User Authentication:** Sign up and log in to manage appointments and profile.
-- **My Appointments:** View and manage your upcoming appointments.
-- **My Profile:** View and edit your personal information.
-- **Responsive Design:** Fully responsive for mobile, tablet, and desktop.
-- **Modern UI:** Built with Tailwind CSS for a clean and modern look.
+The **User Panel** is a user-facing web application where patients can register, book doctor appointments, manage their profile, and make payments securely. Built with React.js, it integrates with the backend via RESTful APIs and Razorpay for online payments.
+
+🌐 **Live URL**: [https://user.docappoint.com](https://user.docappoint.com)  
 
 ---
 
-## Tech Stack
+## 🧩 Tech Stack
 
-- [React](https://react.dev/)
-- [React Router](https://reactrouter.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Vite](https://vitejs.dev/)
-- [ESLint](https://eslint.org/)
+- **React.js**
+- **Tailwind CSS**
+- **Axios** for API communication
+- **JWT-based authentication**
+- **Razorpay** for payments
 
 ---
 
-## Project Structure
+## 🚀 Setup Instructions
+
+```bash
+git clone https://github.com/TarunPal0812/client-user.git
+cd client-user
+npm install
+npm run dev
+````
+
+---
+
+## 🔐 Environment Variables (.env)
+
+```env
+VITE_USER_API=http://localhost:5000/api/user
+VITE_RAZORPAY_KEY=rzp_test_****************
+```
+
+---
+
+## 📁 Suggested Folder Structure
 
 ```
-frontend/
+user-panel/
 ├── public/
-│   └── _redirects
 ├── src/
-│   ├── assets/
 │   ├── components/
-│   ├── context/
 │   ├── pages/
+│   ├── services/
+│   ├── utils/
 │   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── postcss.config.js
-└── vite.config.js
+│   └── main.jsx
+├── .env
+└── README.md
 ```
 
 ---
 
-## Getting Started
+## 🛠️ Key Features
 
-### Prerequisites
+### ✅ Authentication
 
-- Node.js (v16 or above)
-- npm or yarn
+* Register and Login with JWT
+* Store token in localStorage
+* Route protection
 
-### Installation
+### 🧑‍💼 User Profile
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/your-username/doctor-management-system.git
-    cd doctor-management-system/frontend
-    ```
-2. Install dependencies:
-    ```sh
-    npm install
-    # or
-    yarn install
-    ```
-3. Start the development server:
-    ```sh
-    npm run dev
-    # or
-    yarn dev
-    ```
-4. Open [https://docappoint-client.netlify.app/](https://docappoint-client.netlify.app/) in your browser.
+* Upload profile picture
+* Update personal details
 
-### Build for Production
+### 🗓️ Appointment Management
 
-```sh
-npm run build
-# or
-yarn build
+* Book an appointment with available doctors
+* View all your appointments
+* Cancel appointments
+
+### 💳 Payment Integration
+
+* Razorpay payment before confirmation
+* Handle refund flow
+* Payment status verification
+
+---
+
+## 📡 Sample API Usage
+
+```js
+// services/userAPI.js
+import axios from 'axios';
+
+const userAPI = axios.create({ baseURL: import.meta.env.VITE_USER_API });
+
+userAPI.interceptors.request.use((req) => {
+  const token = localStorage.getItem('userToken');
+  if (token) req.headers.Authorization = `Bearer ${token}`;
+  return req;
+});
+
+export const register = (data) => userAPI.post('/register', data);
+export const login = (data) => userAPI.post('/login', data);
+export const getProfile = () => userAPI.get('/get-profile');
+export const bookAppointment = (data) => userAPI.post('/book-appointment', data);
 ```
 
-### Preview Production Build
+---
 
-```sh
-npm run preview
-# or
-yarn preview
+## 💳 Razorpay Integration Flow
+
+1. User clicks "Pay & Book"
+2. `/payment-razorpay` generates an order
+3. Razorpay modal opens
+4. On success, response goes to `/verifyRazorpay`
+5. If canceled, call `/refund-payment` (optional)
+
+---
+
+## 🧪 Postman Testing
+
+Use the routes in `backend/README.md`. Add this header for protected user routes:
+
+```
+Authorization: Bearer <user_token>
 ```
 
----
 
-## Deployment
 
-This project is ready for deployment on platforms like Netlify.  
-For client-side routing support, a `_redirects` file is included in the `public` folder:
+## ⚙️ Deployment Notes
 
-```
-/*    /index.html   200
-```
-
-Set the build command to `npm run build` and the publish directory to `dist`.
+* Use Vercel/Netlify
+* Set environment variables like `VITE_USER_API` and `VITE_RAZORPAY_KEY`
 
 ---
 
-## Available Scripts
+## 🛡️ Security Notes
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview the production build
-- `npm run lint` - Lint the codebase
-
----
-
-## Customization
-
-- **Doctor Data:** Doctor and speciality data are located in `src/assets/assets_frontend/assets.js`.
-- **Styling:** Tailwind CSS configuration is in `tailwind.config.js`.
-- **Routing:** All routes are defined in `src/App.jsx`.
+* Always validate JWT tokens on each request
+* Show only authenticated data
+* Mask sensitive user data in responses
 
 ---
 
-## Folder Overview
+## 📞 Contact
 
-- **`src/components/`**: Reusable UI components (Navbar, Footer, Header, etc.)
-- **`src/pages/`**: Main pages (Home, Doctors, Login, About, Contact, MyProfile, MyAppointments, Appointments)
-- **`src/context/`**: React context for global state management
-- **`src/assets/`**: Images and static assets
+* GitHub: [@TarunPal0812](https://github.com/TarunPal0812)
+* Email: [support@docappoint.com](mailto:tarunpal0812@gmail.com)
 
 ---
 
-## Contributing
-
-Contributions are welcome! Please open issues or submit pull requests for improvements and bug fixes.
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-**DocAppoint** - Book appointments with trusted doctors, anytime, anywhere.
