@@ -7,7 +7,7 @@
 
 The **User Panel** is a user-facing web application where patients can register, book doctor appointments, manage their profile, and make payments securely. Built with React.js, it integrates with the backend via RESTful APIs and Razorpay for online payments.
 
-🌐 **Live URL**: [https://user.docappoint.com](https://user.docappoint.com)  
+🌐 **Live URL**: [https://user.docappoint.com](https://docappoint-user.netlify.app)  
 
 ---
 
