@@ -1,11 +1,12 @@
 import { createContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 // import { doctors } from "../assets/assets_frontend/assets";
 import axios from "axios"
 import { toast } from "react-toastify";
 
 export const AppContext = createContext()
 
-const AppContextProvider = (props) => {
+const AppContextProvider = ({ children }) => {
 
     const currencySymbol = "₹";
 
@@ -75,9 +76,13 @@ const AppContextProvider = (props) => {
 
     return (
         <AppContext.Provider value={value}>
-            {props.children}
+            {children}
         </AppContext.Provider>
     )
 }
+
+AppContextProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+};
 
 export default AppContextProvider;

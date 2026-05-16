@@ -1,152 +1,66 @@
+# DocAppoint - Patient Portal
 
-
----
-
-````markdown
-# 🙋‍♂️ DocAppoint User Panel
-
-The **User Panel** is a user-facing web application where patients can register, book doctor appointments, manage their profile, and make payments securely. Built with React.js, it integrates with the backend via RESTful APIs and Razorpay for online payments.
-
-🌐 **Live URL**: [https://user.docappoint.com](https://docappoint-user.netlify.app)  
+The **Patient Portal** is a sleek, modern React application serving as the primary interface for users to book and manage doctor appointments, manage their health profiles, and process online payments securely.
 
 ---
 
-## 🧩 Tech Stack
+## Tech Stack
 
-- **React.js**
-- **Tailwind CSS**
-- **Axios** for API communication
-- **JWT-based authentication**
-- **Razorpay** for payments
+- **Framework:** React.js + Vite
+- **Styling:** Tailwind CSS
+- **Routing:** React Router DOM
+- **State Management:** React Context API (AppContext)
+- **API Communication:** Axios
+- **Payments:** Razorpay Checkout Integration
+- **Notifications:** React Toastify
 
 ---
 
-## 🚀 Setup Instructions
+## Setup & Installation
 
+### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/TarunPal0812/client-user.git
-cd client-user
+cd frontend
 npm install
-npm run dev
-````
+```
 
----
-
-## 🔐 Environment Variables (.env)
+### 2. Environment Configuration
+Create a `.env` file in the root of the `frontend` directory:
 
 ```env
-VITE_USER_API=http://localhost:5000/api/user
-VITE_RAZORPAY_KEY=rzp_test_****************
+# Point to your local backend (http://localhost:3001) for development
+# Or use the production URL:
+VITE_BACKEND_URL=https://docappoint-server-eyak.onrender.com
+
+# Razorpay Public Key
+KEY_ID="rzp_test_uzoprBwiQG6EL5"
 ```
 
----
-
-## 📁 Suggested Folder Structure
-
+### 3. Start the Development Server
+```bash
+npm run dev
 ```
-user-panel/
-├── public/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── utils/
-│   ├── App.jsx
-│   └── main.jsx
-├── .env
-└── README.md
-```
+The application will be available at `http://localhost:5173`.
 
 ---
 
-## 🛠️ Key Features
+## Key Features
 
-### ✅ Authentication
-
-* Register and Login with JWT
-* Store token in localStorage
-* Route protection
-
-### 🧑‍💼 User Profile
-
-* Upload profile picture
-* Update personal details
-
-### 🗓️ Appointment Management
-
-* Book an appointment with available doctors
-* View all your appointments
-* Cancel appointments
-
-### 💳 Payment Integration
-
-* Razorpay payment before confirmation
-* Handle refund flow
-* Payment status verification
+- **Secure Authentication:** JWT-based login and registration system.
+- **Dynamic Doctor Directory:** Browse doctors, filter by specialization (General Physician, Gynecologist, Dermatologist, etc.).
+- **Real-time Scheduling:** View doctor availability and book specific time slots.
+- **Integrated Payments:** Seamless Razorpay integration for paying appointment fees.
+- **Profile Management:** Update personal details and upload profile pictures.
+- **Appointment Dashboard:** Track upcoming, completed, and cancelled appointments.
 
 ---
 
-## 📡 Sample API Usage
+## Live Deployment
 
-```js
-// services/userAPI.js
-import axios from 'axios';
-
-const userAPI = axios.create({ baseURL: import.meta.env.VITE_USER_API });
-
-userAPI.interceptors.request.use((req) => {
-  const token = localStorage.getItem('userToken');
-  if (token) req.headers.Authorization = `Bearer ${token}`;
-  return req;
-});
-
-export const register = (data) => userAPI.post('/register', data);
-export const login = (data) => userAPI.post('/login', data);
-export const getProfile = () => userAPI.get('/get-profile');
-export const bookAppointment = (data) => userAPI.post('/book-appointment', data);
-```
+The frontend is configured to communicate with the production API deployed at:
+https://docappoint-server-eyak.onrender.com
 
 ---
 
-## 💳 Razorpay Integration Flow
-
-1. User clicks "Pay & Book"
-2. `/payment-razorpay` generates an order
-3. Razorpay modal opens
-4. On success, response goes to `/verifyRazorpay`
-5. If canceled, call `/refund-payment` (optional)
-
----
-
-## 🧪 Postman Testing
-
-Use the routes in `backend/README.md`. Add this header for protected user routes:
-
-```
-Authorization: Bearer <user_token>
-```
-
-
-
-## ⚙️ Deployment Notes
-
-* Use Vercel/Netlify
-* Set environment variables like `VITE_USER_API` and `VITE_RAZORPAY_KEY`
-
----
-
-## 🛡️ Security Notes
-
-* Always validate JWT tokens on each request
-* Show only authenticated data
-* Mask sensitive user data in responses
-
----
-
-## 📞 Contact
-
-* GitHub: [@TarunPal0812](https://github.com/TarunPal0812)
-* Email: [support@docappoint.com](mailto:tarunpal0812@gmail.com)
-
----
-
+## License
+MIT License
